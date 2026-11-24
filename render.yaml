@@ -1,0 +1,25 @@
+# Render Blueprint: one free Docker web service. The PostgreSQL database is external
+# (Neon or Supabase free tier); fill the secrets in the Render dashboard, never in the repo.
+services:
+  - type: web
+    name: harvesta
+    runtime: docker
+    plan: free
+    healthCheckPath: /login
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_NAME
+        value: Harvesta
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: SEED_ADMIN_PASSWORD
+        sync: false
+      - key: SEED_STAFF_PASSWORD
+        sync: false
+      - key: SEED_VIEWER_PASSWORD
+        sync: false

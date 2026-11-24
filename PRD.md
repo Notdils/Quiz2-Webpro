@@ -2,9 +2,11 @@
 
 > **Dokumen ini adalah sumber kebenaran (single source of truth) proyek.** Semua anggota tim dan semua AI agent WAJIB membaca dokumen ini sebelum menulis kode. Jika ada konflik antara instruksi lain dan dokumen ini, dokumen ini yang menang. Jika dokumen ini perlu diubah, ubah lewat Pull Request dan beri tahu seluruh tim.
 
-- **Mata kuliah:** EF234301 Web Programming (D) — Midterm Exam
+- **Mata kuliah:** EF234301 Web Programming (D) — **Quiz 2** (lanjutan dari Midterm)
 - **Tim:** maksimal 3 mahasiswa (nama: `{{MEMBER_A}}`, `{{MEMBER_B}}`, `{{MEMBER_C}}`)
-- **Deadline:** 28 Oktober 2026, pukul 23:59 WIB (denda keterlambatan 0,15% nilai **per menit**; terlambat 1 jam = potongan 9%)
+- **Deadline Quiz 2:** 25 November 2026, pukul 23:59 WIB (denda keterlambatan 0,15% nilai **per menit**). Midterm (Laravel) sudah dikumpulkan 28 Oktober 2026.
+
+> **Perubahan 24 Nov 2026 (Quiz 2):** soal Quiz 2 mewajibkan **JSP (Jakarta Server Pages)**. Seluruh codebase dimigrasikan dari Laravel ke JSP + Servlet + JDBC (Java 21). Fitur, peran, skema, dan aturan bisnis tetap sama; bagian 2, 9, 10, dan 14 diperbarui. Versi Laravel tetap ada di riwayat Git. Konvensi teknis terbaru ada di `AGENTS.md`.
 - **Nama aplikasi:** `{{APP_NAME}}` (placeholder; lihat bagian 3.3 untuk cara menggantinya di satu tempat)
 
 ---
@@ -32,25 +34,26 @@
 
 | # | Syarat | Cara pemenuhan |
 |---|--------|----------------|
-| R1 | Website CRUD memakai Laravel (MVC) | Laravel 13 + Livewire 4 starter kit |
-| R2 | Minimal 8 fitur, tidak termasuk autentikasi | 11 fitur (F-01 s.d. F-11), bagian 5 |
-| R3 | Login, registrasi, dan logout | Bawaan starter kit, disesuaikan (bagian 5.0) |
+| R1 | Website memakai **JSP** (boleh melanjutkan website Midterm) | JSP 3.1 + JSTL + Servlet 6 (MVC: Servlet = controller, JSP = view, JDBC = model) |
+| R2 | Minimal **8 fitur CRUD** | 10 modul CRUD penuh + Dashboard + Reports (bagian 5) |
+| R3 | Login, registrasi, dan logout | Servlet sendiri: BCrypt, CSRF, proteksi session fixation (bagian 5.0) |
+| R3b | "Make it the most beautiful website ever" | Desain bagian 8, CSS sendiri (`assets/app.css`) |
 | R4 | Skema database punya minimal 1 foreign key | Banyak FK (bagian 6) |
 | R5 | Laporan: desain database (CDM & PDM) | Bagian 11 |
 | R6 | Laporan: daftar fitur | Bagian 11 |
 | R7 | Laporan: screenshot + penjelasan tiap fitur | Bagian 11 |
 | R8 | Laporan: persentase dan kontribusi tiap anggota | Bagian 11 |
-| R9 | Deploy ke hosting gratis | Wasmer Edge (bagian 10) |
+| R9 | Deploy ke hosting gratis | Render (Docker + Tomcat) + PostgreSQL gratis Neon/Supabase (bagian 10) |
 | R10 | Source code lengkap di GitHub **publik** | Bagian 9 |
 
 **Rubrik:** Design 20 · Implementation 50 · Analysis/Evaluation 25 · Conclusion 5 = 100.
 
 **Aturan pengumpulan (jangan sampai salah)**
 - Kirim email ke dosen pengampu, CC ke dua asisten (alamat ada di soal ujian).
-- Subjek email: `EF234301_WebPro_MID_StudentID1_Name1_StudentID2_Name2` (sesuaikan jumlah anggota).
-- Lampiran: **satu** ZIP bernama `EF234301_WebPro_MID_StudentID1_Name1_StudentID2_Name2.ZIP` berisi tepat dua file: `Report.PDF` dan `Declaration.PDF` (pernyataan integritas akademik yang sudah ditandatangani).
+- Subjek email: `EF234301_WebPro_Q2_StudentID1_Name1_StudentID2_Name2` (sesuaikan jumlah anggota).
+- Lampiran: **satu** ZIP bernama `EF234301_WebPro_Q2_StudentID1_Name1_StudentID2_Name2.ZIP` berisi tepat dua file: `Report.PDF` dan `Declaration.PDF` (pernyataan integritas akademik yang sudah ditandatangani).
 - Isi email wajib memuat **link repository GitHub publik**.
-- Target kirim: **paling lambat 28 Okt 2026 pukul 20:00 WIB**, jangan menunggu menit-menit terakhir.
+- Target kirim: **paling lambat 25 Nov 2026 pukul 20:00 WIB**, jangan menunggu menit-menit terakhir.
 
 ---
 
@@ -105,10 +108,9 @@ Aturan:
 Semua fitur: tabel dengan pencarian, filter, sortir, pagination (15/halaman), konfirmasi sebelum hapus, flash message sukses/gagal, dan empty state yang informatif.
 
 ### 5.0 Autentikasi (tidak dihitung dalam 8 fitur minimum)
-- Register (name, email, password + confirmation), Login (email + password, remember me), Logout, dan Forgot password bawaan starter kit.
-- Gunakan hasil starter kit apa adanya sebagai dasar; hanya sesuaikan teks (Inggris), tampilan (bagian 8), dan penetapan peran default `staff`.
-- Halaman selain auth wajib diproteksi middleware `auth` (dan `verified` hanya jika email verification diaktifkan; **default: tidak diaktifkan** agar demo mudah).
-- Fitur starter kit yang dipakai (sudah diterapkan lewat `install:features`): registration, password confirmation, two-factor authentication. **Dibuang:** email verification dan passkeys (passkeys butuh WebAuthn/HTTPS dengan domain tetap sehingga berisiko saat deploy).
+- Register (name, email, password + confirmation; peran default `staff`), Login (email + password), Logout (POST + CSRF).
+- Semua halaman selain `/login` dan `/register` diproteksi `AuthFilter`.
+- Versi JSP **tidak** memiliki forgot password, remember me, dan 2FA (butuh layanan email/TOTP; di luar syarat Quiz 2). Peran ketiga **Viewer** (read-only) tetap ada.
 
 ### F-01 Dashboard
 - **Akses:** Admin, Staff (konten finansial hanya untuk Admin).
@@ -184,9 +186,11 @@ Semua fitur: tabel dengan pencarian, filter, sortir, pagination (15/halaman), ko
 
 ## 6. Desain Database (PostgreSQL)
 
-> Skema di bawah adalah **acuan CDM/PDM** (digambar di Vertabelo/Redgate) dan **acuan migration**. Sumber kebenaran runtime adalah migration Laravel; setiap perubahan skema harus memperbarui bagian ini dan diagram, dan dikabarkan ke tim.
+> Skema di bawah adalah **acuan CDM/PDM** (digambar di Vertabelo/Redgate). Sumber kebenaran runtime adalah `src/main/resources/schema.sql` (dijalankan idempoten saat aplikasi start); setiap perubahan skema harus memperbarui bagian ini dan diagram, dan dikabarkan ke tim.
+>
+> **Perbedaan versi JSP:** `users` tidak punya `email_verified_at`, `remember_token`, dan kolom 2FA; peran bisa `admin`/`staff`/`viewer`. `trees.photo_path` diganti `photo bytea` + `photo_type varchar(50)` (foto disimpan di database karena hosting gratis tidak punya disk persisten).
 
-Konvensi: nama tabel jamak snake_case; PK `id` (bigint, auto-increment); semua tabel punya `created_at`, `updated_at`; waktu `timestamp`; uang `decimal(14,2)`; enum diimplementasikan sebagai `string` + PHP backed Enum + validasi (bukan tipe enum native DB, agar migrasi mudah).
+Konvensi: nama tabel jamak snake_case; PK `id` (bigserial); semua tabel punya `created_at`, `updated_at`; waktu `timestamp`; uang `numeric(14,2)`; enum diimplementasikan sebagai `varchar` + Java enum (`Options.java`) + validasi (bukan tipe enum native DB).
 
 ### 6.1 Tabel
 
@@ -360,101 +364,77 @@ Item yang tidak boleh diakses peran tertentu **tidak ditampilkan** dan route-nya
 - Empty state: ikon + kalimat Inggris + tombol aksi ("No trees yet. Add your first tree.").
 - Loading state pada tombol submit; flash message sukses/gagal di pojok atas.
 - Aksesibilitas: kontras cukup, label untuk semua input, fokus terlihat, `alt` pada gambar.
-- Gunakan komponen bawaan starter kit (Flux UI/Tailwind) terlebih dahulu sebelum membuat komponen sendiri.
+- Gunakan tag file yang sudah ada (`WEB-INF/tags`: layout, header, input, select, textarea, empty, delete, pagination) sebelum membuat komponen baru.
+- Font: Fraunces (judul) + Inter (teks), dimuat dari Google Fonts.
 
 ---
 
 ## 9. Tech Stack, Struktur Proyek, dan Alur Git
 
-### 9.1 Stack (dikunci — jangan ganti tanpa kesepakatan tim)
+### 9.1 Stack (Quiz 2, 24 Nov 2026)
 | Lapisan | Pilihan |
 |---------|---------|
-| Bahasa/framework | PHP 8.4 (minimal 8.3), Laravel 13 |
-| Starter kit | **Livewire 4** + Flux UI (free), single-file components (`⚡name.blade.php`) |
-| Database | PostgreSQL 16+ (lokal dan produksi, termasuk tes); tidak memakai SQLite/MySQL |
-| Frontend | Livewire + Blade + Tailwind CSS 4 (bawaan starter kit), Chart.js untuk grafik |
-| Package manager JS | **pnpm** (bukan npm); commit `pnpm-lock.yaml`, jangan commit `package-lock.json` |
-| Tes | PHPUnit (bawaan starter kit) di database PostgreSQL `harvesta_testing`; PHPStan level 7 (Larastan) |
-| Deploy | Wasmer Edge (bagian 10) |
-| Format kode | Laravel Pint |
+| Bahasa | Java 21 (Jakarta EE 10) |
+| View | **JSP 3.1** + JSTL 3 + tag file (`WEB-INF/tags`) + fungsi EL (`WEB-INF/harvesta.tld`) |
+| Controller | Servlet 6, satu servlet per modul (`com.harvesta.web`), turunan `BaseServlet` |
+| Model/data | JDBC + HikariCP (`Db.java`), PostgreSQL 16+ (lokal dan produksi) |
+| Frontend | CSS sendiri (`assets/app.css`, palet bagian 8), Chart.js 4, sedikit JavaScript |
+| Build | Maven (`pom.xml`); server lokal Jetty 12 (`mvn jetty:run`); produksi Tomcat 10.1 (Docker) |
+| Tes | JUnit 5 (`mvn verify`) + smoke test end-to-end (`scripts/smoke.sh`) di GitHub Actions |
+| Deploy | Render (Docker) + PostgreSQL gratis Neon/Supabase (bagian 10) |
 
 Setup lokal tiap anggota:
 ```bash
 git clone <repo-url> && cd <repo>
-composer install && pnpm install
-cp .env.example .env && php artisan key:generate
-# buat DUA database PostgreSQL: harvesta (aplikasi) dan harvesta_testing (tes), isi DB_* di .env
-createdb harvesta && createdb harvesta_testing
-php artisan storage:link
-php artisan migrate:fresh --seed
-composer run dev      # otomatis memakai pnpm (dideteksi dari pnpm-lock.yaml)
-composer test         # Pint + PHPStan + PHPUnit, sama persis dengan CI
+cp .env.example .env          # isi DB_PASSWORD; DB_DATABASE harus database KOSONG
+createdb -U postgres harvesta_jsp
+mvn jetty:run                 # http://localhost:8080 (skema + data demo dibuat otomatis)
+mvn verify                    # kompilasi + unit test
+bash scripts/smoke.sh         # (app harus jalan) cek semua halaman dan peran
 ```
-`.env.example` sudah berisi `DB_CONNECTION=pgsql`, `APP_LOCALE=en`, `APP_TIMEZONE=Asia/Jakarta`, variabel disk `photos`, dan variabel seeder.
+Butuh JDK 21 dan Maven 3.9+ (Windows: `winget install EclipseAdoptium.Temurin.21.JDK` lalu pasang Maven dari maven.apache.org dan tambahkan `bin` ke PATH).
 
-Catatan per OS:
-- **Linux (Ubuntu/Arch):** pasang ekstensi `pdo_pgsql` (Ubuntu: `sudo apt install php8.4-pgsql`; Arch: aktifkan `extension=pdo_pgsql` dan `extension=pgsql` di `/etc/php/php.ini`).
-- **Windows:** PHP dari php.new/Herd Lite **tidak** punya `pdo_pgsql`. Pakai PHP resmi: `winget install PHP.PHP.NTS.8.4`, lalu aktifkan `pdo_pgsql`, `pgsql`, `intl`, `zip`, `fileinfo`, `gd`, `sodium` di `php.ini`.
-
-### 9.2 Struktur folder (tambahan di atas default Laravel)
+### 9.2 Struktur folder
 ```
-app/
-  Enums/            # TreeStatus, ActivityType, HarvestUnit, HarvestGrade, ExpenseCategory, UserRole (+ Concerns/HasOptions)
-  Http/Middleware/  # EnsureUserHasRole (alias `role`)
-  Models/           # + Concerns/RecordsAuthor (isi user_id/created_by otomatis)
-  Policies/         # satu policy per model, auto-discovered
-  Services/         # SaleService (validasi sisa stok), ReportService, dll.
-  Support/          # Format (tanggal, angka, IDR)
-resources/views/pages/  # halaman Livewire single-file, per modul: pages/trees/, pages/care-logs/, ...
-database/{migrations,factories,seeders}
-resources/views/    # dikelompokkan per modul: trees/, care-logs/, ...
-lang/en/
-tests/Feature/
-docs/               # ERD (png/pdf), PRD, catatan
+src/main/java/com/harvesta/   App (startup), Db, Env, Options (enum), Seeder, SaleService
+src/main/java/com/harvesta/web/  BaseServlet, AuthFilter, Form (validasi), Query (filter+paginasi), Fn (fungsi EL), *Servlet
+src/main/resources/           schema.sql, seed-photos/
+src/main/webapp/WEB-INF/      web.xml, harvesta.tld, tags/, views/<modul>/*.jsp
+src/main/webapp/assets/       app.css, app.js, gambar
+scripts/smoke.sh              smoke test
+docs/                         DEPLOY.md, ERD
 ```
-Ikuti pola Livewire dari starter kit; jangan mencampur dua gaya (mis. single-file dan class component) tanpa alasan. Konvensi teknis yang sudah tersedia (komponen, helper, policy, dst.) dirangkum di `AGENTS.md` (di-commit; `CLAUDE.md` hanya mengimpornya). Laravel Boost tidak terpasang.
+Konvensi teknis lengkap: `AGENTS.md`.
 
 ### 9.3 Alur Git
 - Repo GitHub **publik**. **Semua anggota bekerja langsung di branch `main`** (keputusan tim, 22 Okt); tidak memakai feature branch atau PR. Karena itu `main` harus tetap bisa jalan setiap kali di-push.
 - Commit kecil dan sering, memakai Conventional Commits berbahasa Inggris: `feat(trees): add tree photo upload`, `fix(sales): validate remaining quantity`, `docs: update prd`.
-- Alur harian: `git pull --rebase origin main` sebelum mulai kerja dan sebelum push → jalankan `./vendor/bin/pint`, `php artisan test`, dan `php artisan migrate:fresh --seed` tanpa error → `git push origin main`.
-- Konflik saat rebase diselesaikan oleh anggota yang sedang push; jika konflik menyentuh area anggota lain, diskusikan dulu.
-- `.gitignore` wajib mencakup `.env`, `/vendor`, `/node_modules`, `/storage/*.key`, file upload lokal, dan berkas IDE.
+- Alur harian: `git pull --rebase origin main` → `mvn verify` dan smoke test tanpa error → `git push origin main`.
 - **Jangan pernah commit** `.env`, kunci API, password, atau data pribadi. Jika bocor, rotasi kunci.
 
-### 9.4 Aturan migration (mencegah konflik antaranggota)
-- **Semua migration awal (seluruh tabel di bagian 6) dibuat oleh Member A pada Tahap 1** dan di-merge ke `main` sebelum fitur dikerjakan.
-- Setelah itu, perubahan skema hanya lewat migration **baru** (jangan mengedit migration lama yang sudah di-merge), dan wajib mengabari tim serta memperbarui bagian 6 dan ERD.
-- Nama migration deskriptif; tidak ada dua migration yang mengubah tabel yang sama secara bersamaan tanpa koordinasi.
+### 9.4 Aturan skema
+- Perubahan skema hanya lewat `schema.sql` dengan statement idempoten (`create table if not exists`, `alter table ... add column if not exists`), lalu perbarui bagian 6 dan ERD, dan kabari tim.
 
 ---
 
 ## 10. Deployment dan Penyimpanan Foto
 
-### 10.1 Target deploy: Wasmer Edge (diputuskan 27 Okt, menggantikan Azure)
-Langkah lengkap: [`docs/DEPLOY_WASMER.md`](docs/DEPLOY_WASMER.md). Live: <https://harvesta.wasmer.app>.
+### 10.1 Target deploy: Render + PostgreSQL gratis (24 Nov, menggantikan Wasmer)
+Langkah lengkap: [`docs/DEPLOY.md`](docs/DEPLOY.md).
 
-- **Aplikasi:** Wasmer Edge menjalankan PHP built-in server (`php/php` 8.3.4) lewat `wasmer.toml` + `wasmer-router.php`. Wasmer tidak build apa pun: `vendor/` (`composer install`) dan `public/build/` (`pnpm run build`) disiapkan di laptop lalu ikut ter-upload oleh `wasmer deploy`.
-- **Database:** PostgreSQL bawaan Wasmer (region `fr-roub1`), `sslmode=require`.
-- **Foto:** Supabase Storage, bucket publik `harvesta-photos`, diakses lewat protokol S3 (`PHOTO_DISK=s3`).
-- **Migrasi dan seed:** dijalankan manual dari laptop ke database Wasmer (`php artisan migrate --force`), karena sandbox WASI tidak bisa menjalankan subprocess.
-- **Rahasia** (`APP_KEY`, `DB_*`, kunci S3, `SEED_*_PASSWORD`) hanya diisi lewat `wasmer app secrets`, tidak pernah di repo.
-- Riwayat: Azure App Service + Docker sempat berjalan (23 Okt) lalu dihapus dari repo setelah tim sepakat memakai Wasmer.
+- **Aplikasi:** `Dockerfile` multi-stage (Maven build → Tomcat 10.1, `ROOT.war`), port dari `$PORT`. Blueprint: `render.yaml`.
+- **Database:** PostgreSQL gratis (Neon atau Supabase), `sslmode=require`, diisi lewat `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`.
+- **Skema dan seed:** otomatis saat start (database kosong); di produksi `SEED_*_PASSWORD` wajib diisi.
+- **Rahasia** hanya di environment variables Render, tidak pernah di repo.
+- Riwayat: Azure (23 Okt) → Wasmer Edge (27 Okt, versi Laravel) → Render (24 Nov, versi JSP).
 
-### 10.2 Batasan runtime yang harus dipatuhi sejak sekarang
-Anggap disk lokal server bersifat **sementara / tidak persisten**. Maka:
-- Jangan menyimpan data penting di `storage/` lokal. Session, cache, queue memakai driver `database` atau `array`/`sync` (tanpa file).
-- Log ke `stderr` di produksi (`LOG_CHANNEL=stderr`).
-- Ekspor/Laporan dihasilkan streaming, bukan disimpan ke disk.
-- Hindari ekstensi PHP yang tidak umum; periksa kompatibilitas saat uji deploy.
-- Jika uji deploy gagal pada hal tertentu, catat di bagian 14 dan cari alternatif.
+### 10.2 Batasan runtime
+- Disk server **tidak persisten**: tidak ada data aplikasi yang ditulis ke file. Ekspor CSV di-stream langsung ke browser.
+- Session disimpan di memori Tomcat; restart service = pengguna login ulang (diterima untuk demo).
 
-### 10.3 Abstraksi penyimpanan foto (akan "diakali" belakangan)
-- Semua kode foto hanya boleh memakai disk Laravel bernama **`photos`**: `Storage::disk('photos')`. **Dilarang** memakai `public_path()`, `storage_path()`, atau path file langsung.
-- Konfigurasi `config/filesystems.php`: disk `photos` memakai driver dari `PHOTO_DISK` (default `local`, folder `storage/app/public/photos`, butuh `php artisan storage:link`). Saat deploy: `PHOTO_DISK=s3`, `PHOTO_DISK_ROOT=photos`, dan isi `PHOTO_S3_*` (kandidat: Supabase Storage, Cloudflare R2) tanpa mengubah kode fitur. Driver S3 butuh paket `league/flysystem-aws-s3-v3` (dipasang saat keputusan penyimpanan diambil).
-- URL foto selalu lewat method model (mis. `$tree->photo_url`), tidak dirangkai manual di view.
-- Validasi unggah: `image`, mimes `jpg,jpeg,png,webp`, maks. 2048 KB. Hapus file lama saat foto diganti/pohon dihapus permanen.
-- Cadangan terakhir bila semua opsi gagal: simpan foto kecil (≤ 500 KB) sebagai data di database; keputusan ini hanya diambil tim bersama.
+### 10.3 Penyimpanan foto
+- Foto pohon disimpan di kolom `trees.photo` (bytea) dan dilayani oleh `/trees/{id}/photo`; tidak butuh layanan penyimpanan eksternal.
+- Validasi unggah: maks. 2 MB, tipe dideteksi dari *magic bytes* (JPG/PNG/WebP), bukan dari nama file. Mengganti foto menimpa data lama, jadi tidak ada file yatim.
 
 ---
 
@@ -514,18 +494,17 @@ Jika jadwal meleset, potong dulu: PDF export, grafik tambahan, dan fitur foto di
 **Definition of Done (per fitur)**
 1. Sesuai spesifikasi dan aturan di bagian 5 (atribut, validasi, akses).
 2. UI mengikuti bagian 8 dan **seluruh teks berbahasa Inggris benar secara grammar**.
-3. Otorisasi (policy) dan validasi server-side ada.
-4. Tidak ada N+1 pada halaman daftar; ada pagination.
-5. Feature test minimal untuk happy path dan satu kasus gagal; `pint` bersih.
-6. Berjalan di `migrate:fresh --seed` dan di lingkungan semua anggota (Ubuntu/Arch/Windows).
+3. Otorisasi (`requireAdmin`/`requireWriter`/`requireOwnerOrAdmin`) dan validasi server-side (`Form`) ada.
+4. Tidak ada N+1 pada halaman daftar (data ditampilkan lewat satu query JOIN); ada pagination.
+5. `mvn verify` lulus dan halaman baru masuk `scripts/smoke.sh`.
+6. Berjalan di database kosong (skema + seed otomatis) dan di lingkungan semua anggota (Ubuntu/Arch/Windows).
 7. Sudah di-push ke `main` dan dicek anggota lain; screenshot tersedia untuk laporan.
 
-**Keamanan dasar:** CSRF aktif (bawaan), password di-hash, mass assignment dilindungi (`$fillable`), validasi unggahan file, tidak ada SQL mentah tanpa binding, `APP_DEBUG=false` di produksi, rahasia hanya di env/secrets.
+**Keamanan dasar:** token CSRF di setiap POST, password BCrypt, `changeSessionId()` saat login, cookie session HttpOnly + SameSite=Lax, semua output di-escape (`h:e`), semua SQL memakai parameter `?`, kolom penulis (`user_id`, `created_by`) dan `total_amount` diisi server, validasi unggahan file lewat magic bytes, header `X-Frame-Options`/`nosniff`, rahasia hanya di env.
 
-**Catatan uji deploy (isi saat Tahap 1)**
-- Hasil uji Wasmer: awalnya dianggap terblokir karena registry Wasmer hanya menyediakan `php/php` 8.3.4. Solusinya: `composer.json` mengunci `config.platform.php` ke `8.3.4` sehingga dependency (mis. Symfony 7.4) cocok dengan interpreter Wasmer (detail di `docs/DEPLOY_WASMER.md` bagian 6).
-- Docker scaffold dan workflow deploy Azure sempat dipakai, lalu dihapus setelah pindah ke Wasmer (10.1).
-- Keputusan penyimpanan foto produksi: Supabase Storage (lihat 10.1) (sementara `PHOTO_DISK=local`).
+**Catatan uji deploy**
+- Laravel (Midterm): Wasmer Edge, perlu mengunci PHP 8.3.4; foto di Supabase Storage.
+- JSP (Quiz 2): Render free tier tidak punya disk persisten → foto disimpan di PostgreSQL (`bytea`).
 
 ---
 
@@ -542,6 +521,8 @@ Jika jadwal meleset, potong dulu: PDF export, grafik tambahan, dan fitur foto di
 | 7 | Fitur auth starter kit | registration, password confirmation, 2FA dipakai; passkeys dan email verification dibuang (22 Okt) |
 | 8 | Database tes | PostgreSQL `harvesta_testing`, bukan SQLite in-memory (22 Okt) |
 | 9 | Alur Git | semua kerja langsung di `main`, tanpa feature branch/PR (keputusan tim, 22 Okt) |
+| 10 | Teknologi Quiz 2 | JSP + Servlet + JDBC (Java 21), migrasi penuh dari Laravel (24 Nov). Baris 3, 6, 7, 8 di atas hanya berlaku untuk versi Laravel |
+| 11 | Hosting Quiz 2 | Render (Docker) + PostgreSQL gratis Neon/Supabase; foto di database (24 Nov) |
 
 ---
 
@@ -550,11 +531,11 @@ Jika jadwal meleset, potong dulu: PDF export, grafik tambahan, dan fitur foto di
 Berlaku untuk semua agent di laptop semua anggota:
 1. **Baca** `PRD.md` dan `AGENTS.md` sebelum mengubah apa pun; ikuti stack, konvensi, dan batas area kepemilikan (bagian 12).
 2. **Jangan** mengubah skema, enum, atau kontrak antarmodul di luar area sendiri; ajukan perubahan sebagai PR/diskusi.
-3. **Jangan** mengganti teknologi (pnpm, PostgreSQL, Livewire, Wasmer), menambah dependency besar, atau mengubah arsitektur tanpa persetujuan tim.
+3. **Jangan** mengganti teknologi (JSP/Servlet, PostgreSQL, Maven, Render), menambah dependency besar, atau mengubah arsitektur tanpa persetujuan tim.
 4. **Seluruh teks UI dalam bahasa Inggris yang benar**; kode dan commit juga Inggris.
-5. Gunakan `config('app.name')`, disk `photos`, Policy, Form Request/validasi, eager loading, dan pagination sesuai PRD.
+5. Gunakan `App.NAME`/`${appName}`, `BaseServlet`, `Form`, `Query`, `<ui:*>` tag, dan pagination sesuai `AGENTS.md`.
 6. Jangan menulis file ke disk server untuk data aplikasi; jangan commit rahasia; jangan push kecuali diminta anggota tim (push dilakukan oleh manusia).
-7. Jalankan `pint` dan tes sebelum menyatakan tugas selesai. Jangan menyatakan selesai jika tes gagal.
+7. Jalankan `mvn verify` dan `scripts/smoke.sh` sebelum menyatakan tugas selesai. Jangan menyatakan selesai jika tes gagal.
 8. Bila instruksi pengguna bertentangan dengan PRD, beri tahu pengguna dan minta mereka memperbarui PRD terlebih dahulu.
 9. Pertahankan perubahan sekecil mungkin dan terarah; jangan merapikan/mengubah file yang tidak terkait tugas.
 10. Jelaskan secara singkat apa yang diubah dan file mana saja, tanpa mengulang seluruh kode di jawaban akhir.
